@@ -14,20 +14,20 @@ contract FixedNFTSet is ERC721, ERC721Enumerable, ERC165 {
 uint private immutable tokenCount;
 
 // Each token (index/ID) has one owner at a time.
-// Zero/absent entries default to defaultOwner.
+// Zero/absent entries take the defaultOwner value.
 mapping(uint => address) private tokenOwners;
 
-// Zero/absent entries in tokenOwners default to defaultOwner.
+// Zero/absent entries in tokenOwners take the defaultOwner value.
 address private immutable defaultOwner;
 
-// Each token (index/ID) can [optional] grant transfer permission to one operator.
+// Each token (index/ID) can be granted to a destination address.
 mapping(uint => address) private tokenApprovals;
 
-// The token-owner:token-operator:approval-flag leaks by design.
+// The token-owner:token-operator:approval-flag entries are always true.
 mapping(address => mapping(address => bool)) private operatorApprovals;
 
-// Constructor mints n tokens, with index/ID 0 to n, excluding n.
-// Each token is assined to owner.
+// Constructor mints n tokens—index/ID 0 to n, excluding n.
+// Each token is assigned to owner.
 constructor(uint n, address owner) {
 	requireAddress(owner);
 	tokenCount   = n;
@@ -39,7 +39,7 @@ function requireAddress(address a) internal pure {
 	require(a != address(0), "ERC721 address 0");
 }
 
-// RequireToken denies token index/ID that are out of range.
+// RequireToken denies token index/ID that are not in use.
 function requireToken(uint indexOrID) internal view {
 	require(indexOrID < tokenCount, "ERC-721 token \u2415");
 }
@@ -135,8 +135,6 @@ function approve(address to, uint tokenID) public override(ERC721) payable {
 	emit Approval(owner, to, tokenID);
 }
 
-// The implementation leaks by design. The operator entries should be cleared with a
-// false approved once no longer needed.
 function setApprovalForAll(address operator, bool approved) public override(ERC721) {
 	requireAddress(operator); // not required by spec
 	if (approved) {
