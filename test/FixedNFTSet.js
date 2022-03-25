@@ -15,6 +15,10 @@ before(async function() {
 beforeEach(async function() {
 	this.c = await this.factory.deploy(3, this.alice.address);
 	await this.c.deployed();
+
+	this.asAlice = this.c.connect(this.alice);
+	this.asBob   = this.c.connect(this.bob);
+	this.asCarol = this.c.connect(this.carol);
 });
 
 context("on initial state", function() {
@@ -44,6 +48,39 @@ context("on initial state", function() {
 		assert.equal(await this.c.getApproved(0), 0, "approved of token #0");
 		assert.equal(await this.c.getApproved(1), 0, "approved of token #1");
 		assert.equal(await this.c.getApproved(2), 0, "approved of token #2");
+	});
+});
+
+context("gas consumption", function() {
+	it("should limit instantiation costs", async function() {
+		var tx = await this.c.deployTransaction.wait();
+		assert.isBelow(tx.gasUsed, 1500000, "gas used on deployment");
+
+		var estimate = this.c.estimateGas;
+		assert.isAtMost(await estimate.ownerOf(1), 24250, "gas used on #ownerOf");
+	});
+
+	it("should limit approval costs", async function() {
+		var asAlice = this.asAlice.estimateGas;
+		assert.isAtMost(await asAlice.approve(this.bob.address, 1), 48812, "gas used on #approve");
+		assert.isAtMost(await asAlice.setApprovalForAll(this.carol.address, 1), 46658, "gas used on #setApprovalForAll");
+		assert.isAtMost(await asAlice.setApprovalForAll(this.carol.address, 0), 27023, "gas used on #setApprovalForAll NOP");
+	});
+
+	it("should limit transfer costs", async function() {
+		// transfer coin #0 from Alice to Bob as owner
+		var asAlice = this.asAlice.estimateGas;
+		assert.isAtMost(await asAlice.transferFrom(this.alice.address, this.bob.address, 0), 49812, "gas used as owner");
+
+		// transfer coin #1 from Alice to Bob with approval
+		await this.asAlice.approve(this.bob.address, 1);
+		var asBob   = this.asAlice.estimateGas;
+		assert.isAtMost(await asBob.transferFrom(this.alice.address, this.bob.address, 1), 55151, "gas used with approve");
+
+		// transfer coin #2 from Alice to Bob with operator
+		await this.asAlice.setApprovalForAll(this.carol.address, true);
+		var asCarol = this.asAlice.estimateGas;
+		assert.isAtMost(await asCarol.transferFrom(this.alice.address, this.bob.address, 2), 49824, "gas used as operator");
 	});
 });
 
