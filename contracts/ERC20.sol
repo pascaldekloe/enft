@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.4.17;
+pragma solidity ^0.8.4;
 
 /// @title ERC-20 Token Standard
 /// @dev See https://eips.ethereum.org/EIPS/eip-20
@@ -14,10 +14,10 @@ interface ERC20 {
 	event Approval(address indexed _owner, address indexed _spender, uint256 _value);
 
 	// Returns the total token supply.
-	function totalSupply() public view returns (uint256);
+	function totalSupply() external view returns (uint256);
 
 	// Returns the account balance of another account with address _owner.
-	function balanceOf(address _owner) public view returns (uint256 balance);
+	function balanceOf(address _owner) external view returns (uint256 balance);
 
 	// Transfers _value amount of tokens to address _to, and MUST fire the Transfer
 	// event. The function SHOULD throw if the message caller’s account balance does
@@ -25,7 +25,7 @@ interface ERC20 {
 	//
 	// Note Transfers of 0 values MUST be treated as normal transfers and fire the
 	// Transfer event.
-	function transfer(address _to, uint256 _value) public returns (bool success);
+	function transfer(address _to, uint256 _value) external returns (bool success);
 
 	// Transfers _value amount of tokens from address _from to address _to, and MUST
 	// fire the Transfer event.
@@ -38,7 +38,7 @@ interface ERC20 {
 	//
 	// Note Transfers of 0 values MUST be treated as normal transfers and fire the
 	// Transfer event.
-	function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
+	function transferFrom(address _from, address _to, uint256 _value) external returns (bool success);
 
 	// Allows _spender to withdraw from your account multiple times, up to the
 	// _value amount. If this function is called again it overwrites the current
@@ -51,8 +51,8 @@ interface ERC20 {
 	// set the allowance first to 0 before setting it to another value for the same
 	// spender. THOUGH The contract itself shouldn’t enforce it, to allow backwards
 	// compatibility with contracts deployed before.
-	function approve(address _spender, uint256 _value) public returns (bool success);
+	function approve(address _spender, uint256 _value) external returns (bool success);
 
 	// Returns the amount which _spender is still allowed to withdraw from _owner.
-	function allowance(address _owner, address _spender) public view returns (uint256 remaining);
+	function allowance(address _owner, address _spender) external view returns (uint256 remaining);
 }
