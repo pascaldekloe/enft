@@ -1,7 +1,7 @@
 {
 	"name": "enft",
 	"version": "0.2.0",
-	"description": "Efficient Non-Fungible Token contracts ⛽️",
+	"description": "Efficient Token Contracts ⛽️",
 	"author": "Pascal S. de Kloe <pascal@quies.net>",
 	"devDependencies": {
 		"@nomiclabs/hardhat-ethers": "^2.0.5",
