@@ -91,7 +91,11 @@ function balanceOf(address owner) public override(ERC721) view returns (uint) {
 
 function ownerOf(uint tokenID) public override(ERC721) view returns (address) {
 	requireToken(tokenID);
-	return tokenOwners[tokenID];
+	address owner = tokenOwners[tokenID];
+	if ((owner) == address(0)) {
+		return defaultOwner;
+	}
+	return owner;
 }
 
 function safeTransferFrom(address from, address to, uint tokenID, bytes calldata data) public override(ERC721) payable {
