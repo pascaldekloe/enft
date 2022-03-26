@@ -32,6 +32,10 @@ constructor(uint n, address owner) {
 	requireAddress(owner);
 	tokenCount   = n;
 	defaultOwner = owner;
+
+	while (n != 0) {
+		emit Transfer(address(0), owner, --n);
+	}
 }
 
 // RequireAddress denies the zero value.
