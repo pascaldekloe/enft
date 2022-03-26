@@ -136,7 +136,6 @@ function approve(address to, uint tokenID) public override(ERC721) payable {
 }
 
 function setApprovalForAll(address operator, bool approved) public override(ERC721) {
-	requireAddress(operator); // not required by spec
 	if (approved) {
 		operatorApprovals[msg.sender][operator] = true;
 	} else {
