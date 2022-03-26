@@ -6,6 +6,17 @@ standards. All payable methods are writen for minimal gas consumption.
 Automated tests execute standalone with `npx hardhat test`.
 
 
+## Efficiency
+
+Contract deployement is rather heavy with 1.5 M gas for a `FixedNFTSet`.
+
+Token transfers come in 3 variations.
+
+1. A plain `transferFrom` as the onwer of a token costs 50 k gas.
+2. An `approve` costs 49 k gas, with 55 k gas on `tranferFrom`.
+3. A `setApprovalForAll` costs 47 k gas, with 50 k gas on `tranferFrom`.
+
+
 ## Use
 
 It is recommended to import contracts with a versioned path only.

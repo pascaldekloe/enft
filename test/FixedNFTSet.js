@@ -69,18 +69,20 @@ context("gas consumption", function() {
 
 	it("should limit transfer costs", async function() {
 		// transfer coin #0 from Alice to Bob as owner
-		var asAlice = this.asAlice.estimateGas;
-		assert.isAtMost(await asAlice.transferFrom(this.alice.address, this.bob.address, 0), 49812, "gas used as owner");
+		var estimateAsAlice = this.asAlice.estimateGas;
+		assert.isAtMost(await estimateAsAlice.transferFrom(this.alice.address, this.bob.address, 0), 49812, "gas used as owner");
 
 		// transfer coin #1 from Alice to Bob with approval
+		assert.isAtMost(await estimateAsAlice.approve(this.bob.address, 1), 48812, "gas used on approve");
 		await this.asAlice.approve(this.bob.address, 1);
-		var asBob = this.asAlice.estimateGas;
-		assert.isAtMost(await asBob.transferFrom(this.alice.address, this.bob.address, 1), 55151, "gas used with approve");
+		var estimateAsBob = this.asAlice.estimateGas;
+		assert.isAtMost(await estimateAsBob.transferFrom(this.alice.address, this.bob.address, 1), 55151, "gas used with approve");
 
 		// transfer coin #2 from Alice to Bob with operator
+		assert.isAtMost(await estimateAsAlice.setApprovalForAll(this.carol.address, true), 46591, "gas used on approve for all");
 		await this.asAlice.setApprovalForAll(this.carol.address, true);
-		var asCarol = this.asAlice.estimateGas;
-		assert.isAtMost(await asCarol.transferFrom(this.alice.address, this.bob.address, 2), 49824, "gas used as operator");
+		var estimateAsCarol = this.asAlice.estimateGas;
+		assert.isAtMost(await estimateAsCarol.transferFrom(this.alice.address, this.bob.address, 2), 49824, "gas used as operator");
 	});
 });
 
