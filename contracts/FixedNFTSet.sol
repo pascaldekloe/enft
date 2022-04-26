@@ -27,15 +27,11 @@ mapping(uint => address) private tokenApprovals;
 mapping(address => mapping(address => bool)) private operatorApprovals;
 
 // Constructor mints n tokens—index/ID 0 to n, excluding n.
-// Each token is assigned to owner.
+// Each token is assigned to owner, without Transfer emission.
 constructor(uint n, address owner) {
 	requireAddress(owner);
 	tokenCount   = n;
 	defaultOwner = owner;
-
-	while (n != 0) {
-		emit Transfer(address(0), owner, --n);
-	}
 }
 
 // RequireAddress denies the zero value.

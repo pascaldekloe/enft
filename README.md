@@ -35,6 +35,10 @@ contract ADozen is FixedNFTSet, ERC721Metadata {
 
 // Constructor assigns all 12 tokens to owner.
 constructor(address owner) FixedNFTSet(12, owner) {
+	// initial Transfer emission is optional
+	for (uint token = 0; token < 12; token++) {
+		emit Transfer(address(0), owner, token);
+	}
 }
 
 // SupportsInterface advertises metadata availability.
