@@ -36,7 +36,7 @@ constructor(uint n, address owner) {
 
 // RequireAddress denies the zero value.
 function requireAddress(address a) internal pure {
-	require(a != address(0), "ERC721 address 0");
+	require(a != address(0), "ERC-721 address 0");
 }
 
 // RequireToken denies token index/ID that are not in use.
@@ -130,7 +130,7 @@ function transferFrom(address from, address to, uint tokenID) public override(ER
 
 function approve(address to, uint tokenID) public override(ERC721) payable {
 	address owner = ownerOf(tokenID); // checks token ID
-	require(msg.sender == owner || isApprovedForAll(owner, msg.sender), "ERC721 sender deny");
+	require(msg.sender == owner || isApprovedForAll(owner, msg.sender), "ERC-721 sender deny");
 	tokenApprovals[tokenID] = to;
 	emit Approval(owner, to, tokenID);
 }

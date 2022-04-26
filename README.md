@@ -25,13 +25,12 @@ It is recommended to import contracts with a versioned path only.
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity ^0.8.12;
 
-import "https://github.com/pascaldekloe/enft/blob/v1.0.0/contracts/ERC165.sol";
 import "https://github.com/pascaldekloe/enft/blob/v1.0.0/contracts/ERC721Metadata.sol";
 import "https://github.com/pascaldekloe/enft/blob/v1.0.0/contracts/FixedNFTSet.sol";
 
 
 // NFT example with 12 tokens.
-contract ADozen is FixedNFTSet, ERC721Metadata {
+contract MyDozen is FixedNFTSet, ERC721Metadata {
 
 // Constructor assigns all 12 tokens to owner.
 constructor(address owner) FixedNFTSet(12, owner) {
@@ -48,14 +47,14 @@ function supportsInterface(bytes4 interfaceID) public override(FixedNFTSet) pure
 }
 
 function name() override(ERC721Metadata) public pure returns (string memory) {
-	return "Dozenth";
+	return "MyDozen";
 }
 
 function symbol() override(ERC721Metadata) public pure returns (string memory) {
-	return "DZNTH";
+	return "MDZN";
 }
 
-bytes constant tokenURIPrefix = "https://example.com/v1/adozen/token";
+bytes constant tokenURIPrefix = "https://example.com/v1/MyDozen/token";
 bytes constant tokenURISuffix = ".json";
 
 function tokenURI(uint256 tokenID) override(ERC721Metadata) public view returns (string memory) {
