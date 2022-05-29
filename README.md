@@ -25,8 +25,8 @@ It is recommended to import contracts with a versioned path only.
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity ^0.8.12;
 
-import "https://github.com/pascaldekloe/enft/blob/v1.0.0/contracts/ERC721Metadata.sol";
-import "https://github.com/pascaldekloe/enft/blob/v1.0.0/contracts/FixedNFTSet.sol";
+import "https://github.com/pascaldekloe/enft/blob/v1.0.1/contracts/ERC721Metadata.sol";
+import "https://github.com/pascaldekloe/enft/blob/v1.0.1/contracts/FixedNFTSet.sol";
 
 
 // NFT example with 12 tokens.

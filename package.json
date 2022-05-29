@@ -1,6 +1,6 @@
 {
 	"name": "enft",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Efficient Token Contracts ⛽️",
 	"author": "Pascal S. de Kloe <pascal@quies.net>",
 	"devDependencies": {
