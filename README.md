@@ -8,13 +8,13 @@ Automated tests execute standalone with `npx hardhat test`.
 
 ## Efficiency
 
-A `FixedNFTSet` deployement costs 1.4 M gas.
+A `FixedNFTSet` deployement costs 837 k gas.
 
 Token transfers come in 3 variations.
 
-1. A plain `transferFrom` as the onwer of a token costs 50 k gas.
-2. An `approve` costs 49 k gas, with 55 k gas on `tranferFrom`.
-3. A `setApprovalForAll` costs 47 k gas, with 50 k gas on `tranferFrom`.
+1. A plain `transferFrom` as the onwer of a token costs 49 k gas.
+2. An `approve` costs 48 k gas, with 48 k gas on `tranferFrom`.
+3. A `setApprovalForAll` costs 46 k gas, with 49 k gas on `tranferFrom`.
 
 
 ## Use
