@@ -54,10 +54,10 @@ context("on initial state", function() {
 context("gas consumption", function() {
 	it("should limit instantiation costs", async function() {
 		var tx = await this.c.deployTransaction.wait();
-		assert.isAtMost(tx.gasUsed, 1459091, "gas used on deployment");
+		assert.isAtMost(tx.gasUsed, 1377384, "gas used on deployment");
 
 		var estimate = this.c.estimateGas;
-		assert.isAtMost(await estimate.ownerOf(1), 24250, "gas used on #ownerOf");
+		assert.isAtMost(await estimate.ownerOf(1), 24294, "gas used on #ownerOf");
 	});
 
 	it("should limit approval costs", async function() {

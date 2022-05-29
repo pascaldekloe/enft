@@ -61,8 +61,7 @@ function tokenByIndex(uint index) public override(ERC721Enumerable) view returns
 function tokenOfOwnerByIndex(address owner, uint index) public override(ERC721Enumerable) view returns (uint tokenID) {
 	requireAddress(owner);
 	for (tokenID = 0; tokenID < totalSupply(); tokenID++) {
-		address a = tokenOwners[tokenID];
-		if (a == owner || (a == address(0) && owner == address(uint160(tokenCountAndDefaultOwner)))) {
+		if (ownerOf(tokenID) == owner) {
 			if (index == 0) {
 				return tokenID;
 			}
@@ -78,8 +77,7 @@ function balanceOf(address owner) public override(ERC721) view returns (uint) {
 	uint balance = 0;
 	// count owner matches
 	for (uint tokenID = 0; tokenID < totalSupply(); tokenID++) {
-		address a = tokenOwners[tokenID];
-		if (a == owner || (a == address(0) && owner == address(uint160(tokenCountAndDefaultOwner)))) {
+		if (ownerOf(tokenID) == owner) {
 			++balance;
 		}
 	}

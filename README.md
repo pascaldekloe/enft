@@ -8,7 +8,7 @@ Automated tests execute standalone with `npx hardhat test`.
 
 ## Efficiency
 
-Contract deployement is rather heavy with 1.5 M gas for a `FixedNFTSet`.
+A `FixedNFTSet` deployement costs 1.4 M gas.
 
 Token transfers come in 3 variations.
 
