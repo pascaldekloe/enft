@@ -11,14 +11,12 @@ import "./ERC721TokenReceiver.sol";
 contract FixedNFTSet is ERC721, ERC721Enumerable, ERC165 {
 
 // The number of tokens is fixed during contract creation.
-uint private immutable tokenCount;
+// Zero/absent entries in tokenOwners take the defaultOwner value.
+uint private immutable tokenCountAndDefaultOwner;
 
 // Each token (index/ID) has one owner at a time.
 // Zero/absent entries take the defaultOwner value.
 mapping(uint => address) private tokenOwners;
-
-// Zero/absent entries in tokenOwners take the defaultOwner value.
-address private immutable defaultOwner;
 
 // Each token (index/ID) can be granted to a destination address.
 mapping(uint => address) private tokenApprovals;
@@ -30,8 +28,7 @@ mapping(address => mapping(address => bool)) private operatorApprovals;
 // Each token is assigned to owner, without Transfer emission.
 constructor(uint n, address owner) {
 	requireAddress(owner);
-	tokenCount   = n;
-	defaultOwner = owner;
+	tokenCountAndDefaultOwner = uint(uint160(owner)) | (n << 160);
 }
 
 // RequireAddress denies the zero value.
@@ -41,7 +38,7 @@ function requireAddress(address a) internal pure {
 
 // RequireToken denies token index/ID that are not in use.
 function requireToken(uint indexOrID) internal view {
-	require(indexOrID < tokenCount, "ERC-721 token \u2415");
+	require(indexOrID < totalSupply(), "ERC-721 token \u2415");
 }
 
 function supportsInterface(bytes4 interfaceID) public virtual override(ERC165) pure returns (bool) {
@@ -52,7 +49,7 @@ function supportsInterface(bytes4 interfaceID) public virtual override(ERC165) p
 }
 
 function totalSupply() public override(ERC721Enumerable) view returns (uint) {
-	return tokenCount;
+	return tokenCountAndDefaultOwner >> 160;
 }
 
 // Tokens are identified by their index one-to-one.
@@ -63,9 +60,9 @@ function tokenByIndex(uint index) public override(ERC721Enumerable) view returns
 
 function tokenOfOwnerByIndex(address owner, uint index) public override(ERC721Enumerable) view returns (uint tokenID) {
 	requireAddress(owner);
-	for (tokenID = 0; tokenID < tokenCount; tokenID++) {
+	for (tokenID = 0; tokenID < totalSupply(); tokenID++) {
 		address a = tokenOwners[tokenID];
-		if (a == owner || (a == address(0) && owner == defaultOwner)) {
+		if (a == owner || (a == address(0) && owner == address(uint160(tokenCountAndDefaultOwner)))) {
 			if (index == 0) {
 				return tokenID;
 			}
@@ -80,9 +77,9 @@ function balanceOf(address owner) public override(ERC721) view returns (uint) {
 	requireAddress(owner);
 	uint balance = 0;
 	// count owner matches
-	for (uint tokenID = 0; tokenID < tokenCount; tokenID++) {
+	for (uint tokenID = 0; tokenID < totalSupply(); tokenID++) {
 		address a = tokenOwners[tokenID];
-		if (a == owner || (a == address(0) && owner == defaultOwner)) {
+		if (a == owner || (a == address(0) && owner == address(uint160(tokenCountAndDefaultOwner)))) {
 			++balance;
 		}
 	}
@@ -92,8 +89,8 @@ function balanceOf(address owner) public override(ERC721) view returns (uint) {
 function ownerOf(uint tokenID) public override(ERC721) view returns (address) {
 	requireToken(tokenID);
 	address owner = tokenOwners[tokenID];
-	if ((owner) == address(0)) {
-		return defaultOwner;
+	if (owner == address(0)) {
+		return address(uint160(tokenCountAndDefaultOwner));
 	}
 	return owner;
 }
