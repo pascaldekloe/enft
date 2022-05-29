@@ -69,7 +69,7 @@ function tokenOfOwnerByIndex(address owner, uint index) public override(ERC721En
 			--index;
 		}
 	}
-	revert("ERC721 index exceeds balance");
+	revert("ERC-721 index exceeds balance");
 }
 
 function balanceOf(address owner) public override(ERC721) view returns (uint) {
