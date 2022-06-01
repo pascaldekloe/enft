@@ -51,6 +51,26 @@ context("on initial state", function() {
 	});
 });
 
+context("on EIP-165 check", function() {
+	it("supportsInterface", async function() {
+		// required by EIP-165
+		assert.isFalse(await this.c.supportsInterface("0xffffffff"), "deny 0xffffffff");
+		// match self
+		assert.isTrue(await this.c.supportsInterface("0x01ffc9a7"), "ERC165");
+		// check each byte
+		assert.isFalse(await this.c.supportsInterface("0x02ffc9a7"), "ERC165 byte 1 mis");
+		assert.isFalse(await this.c.supportsInterface("0x01efc9a7"), "ERC165 byte 2 mis");
+		assert.isFalse(await this.c.supportsInterface("0x01ffcaa7"), "ERC165 byte 3 mis");
+		assert.isFalse(await this.c.supportsInterface("0x01ffc9a8"), "ERC165 byte 4 mis");
+
+		// NFT interfaces
+		assert.isTrue(await this.c.supportsInterface("0x80ac58cd"), "ERC721");
+		assert.isFalse(await this.c.supportsInterface("0x150b7a02"), "ERC721TokenReceiver");
+		assert.isFalse(await this.c.supportsInterface("0x5b5e139f"), "ERC721Metadata");
+		assert.isTrue(await this.c.supportsInterface("0x780e9d63"), "ERC721Enumerable");
+	});
+});
+
 context("gas consumption", function() {
 	it("should limit instantiation costs", async function() {
 		var tx = await this.c.deployTransaction.wait();
