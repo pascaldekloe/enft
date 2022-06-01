@@ -7,7 +7,7 @@ import "./ERC721Enumerable.sol";
 import "./ERC721TokenReceiver.sol";
 
 
-// FixedNFTSet manages a fixed amount of NFTs.
+// FixedNFTSet manages a fixed amount of non-fungible tokens.
 contract FixedNFTSet is ERC721, ERC721Enumerable, ERC165 {
 
 // The number of tokens is fixed during contract creation.
@@ -24,11 +24,12 @@ mapping(uint => address) private tokenApprovals;
 // The token-owner:token-operator:approval-flag entries are always true.
 mapping(address => mapping(address => bool)) private operatorApprovals;
 
-// Constructor mints n tokens—index/ID 0 to n, excluding n.
-// Each token is assigned to owner, without Transfer emission.
-constructor(uint n, address owner) {
-	requireAddress(owner);
-	tokenCountAndDefaultOwner = uint(uint160(owner)) | (n << 160);
+// Constructor mints n tokens, and transfers each token to the receiver address.
+// Token identifiers match their respective index, counting from 0 to n − 1.
+// Initial Transfer emission is omitted.
+constructor(uint n, address receiver) {
+	requireAddress(receiver);
+	tokenCountAndDefaultOwner = uint(uint160(receiver)) | (n << 160);
 }
 
 // RequireAddress denies the zero value.
@@ -36,7 +37,7 @@ function requireAddress(address a) internal pure {
 	require(a != address(0), "ERC-721 address 0");
 }
 
-// RequireToken denies token index/ID that are not in use.
+// RequireToken denies any token index/ID that is not in this contract.
 function requireToken(uint indexOrID) internal view {
 	require(indexOrID < totalSupply(), "ERC-721 token \u2415");
 }
