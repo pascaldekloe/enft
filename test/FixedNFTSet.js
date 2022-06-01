@@ -57,6 +57,8 @@ context("on EIP-165 check", function() {
 		assert.isFalse(await this.c.supportsInterface("0xffffffff"), "deny 0xffffffff");
 		// match self
 		assert.isTrue(await this.c.supportsInterface("0x01ffc9a7"), "ERC165");
+		// double-check literal value
+		assert.isTrue(await this.c.supportsInterface(this.c.interface.getSighash('supportsInterface')), "ERC165 getSighash");
 		// check each byte
 		assert.isFalse(await this.c.supportsInterface("0x02ffc9a7"), "ERC165 byte 1 mis");
 		assert.isFalse(await this.c.supportsInterface("0x01efc9a7"), "ERC165 byte 2 mis");
