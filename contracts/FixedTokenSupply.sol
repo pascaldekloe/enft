@@ -8,16 +8,16 @@ import "./ERC20.sol";
 // FixedTokenSupply manages a fixed amount of fungible tokens.
 contract FixedTokenSupply is ERC20, ERC165 {
 
-uint public override(ERC20) immutable totalSupply;
+uint256 public override(ERC20) immutable totalSupply;
 
 // Balances tracks all token owners.
-mapping(address => uint) private balances;
+mapping(address => uint256) private balances;
 
 // The token-owner:token-receiver:approved-quantity entries are always non-zero.
-mapping(address => mapping(address => uint)) approvals;
+mapping(address => mapping(address => uint256)) approvals;
 
 // Constructor mints n tokens, and transfers each token to the receiver address.
-constructor(uint n, address receiver) {
+constructor(uint256 n, address receiver) {
 	totalSupply = n;
 	balances[receiver] = n;
 	emit Transfer(address(0), receiver, n);
@@ -29,19 +29,19 @@ function supportsInterface(bytes4 interfaceID) public virtual override(ERC165) p
 	    || interfaceID == 0x01ffc9a7; // ERC165
 }
 
-function balanceOf(address owner) public override(ERC20) view returns (uint) {
+function balanceOf(address owner) public override(ERC20) view returns (uint256) {
 	return balances[owner];
 }
 
-function transfer(address to, uint amount) public override(ERC20) returns (bool) {
+function transfer(address to, uint256 amount) public override(ERC20) returns (bool) {
 	// msg.sender is authorized to operate on his own tokens
 	authorizedTransferFrom(msg.sender, to, amount);
 	return true; // always
 }
 
-function transferFrom(address from, address to, uint amount) public override(ERC20) returns (bool) {
+function transferFrom(address from, address to, uint256 amount) public override(ERC20) returns (bool) {
 	// check approval
-	uint approved = allowance(from, msg.sender);
+	uint256 approved = allowance(from, msg.sender);
 	require(approved >= amount, "insufficient allowance");
 	// operate with permission
 	authorizedTransferFrom(from, to, amount);
@@ -52,9 +52,9 @@ function transferFrom(address from, address to, uint amount) public override(ERC
 
 // AuthorizedTransferFrom assumes that msg.sender is permitted to withdraw the
 // amount from the from address.
-function authorizedTransferFrom(address from, address to, uint amount) private {
+function authorizedTransferFrom(address from, address to, uint256 amount) private {
 	// validate sender balance
-	uint saldo = balances[from];
+	uint256 saldo = balances[from];
 	require(saldo >= amount, "insufficient balance");
 	// deduct from sender balance
 	balances[from] = saldo - amount;
@@ -64,7 +64,7 @@ function authorizedTransferFrom(address from, address to, uint amount) private {
 	emit Transfer(from, to, amount);
 }
 
-function approve(address spender, uint amount) public override(ERC20) returns (bool) {
+function approve(address spender, uint256 amount) public override(ERC20) returns (bool) {
 	// msg.sender is authorized to operate on his own tokens
 	authorizedApprove(msg.sender, spender, amount);
 	return true; // always
@@ -72,7 +72,7 @@ function approve(address spender, uint amount) public override(ERC20) returns (b
 
 // AuthorizedApprove assumes msg.sender is permitted to set the allowance amount
 // of spender for the owner address.
-function authorizedApprove(address owner, address spender, uint amount) private {
+function authorizedApprove(address owner, address spender, uint256 amount) private {
 	if (amount == 0) {
 		delete approvals[owner][spender];
 	} else {
@@ -81,7 +81,7 @@ function authorizedApprove(address owner, address spender, uint amount) private 
 	emit Approval(owner, spender, amount);
 }
 
-function allowance(address owner, address spender) public override(ERC20) view returns (uint) {
+function allowance(address owner, address spender) public override(ERC20) view returns (uint256) {
 	return approvals[owner][spender];
 }
 
