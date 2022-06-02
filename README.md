@@ -25,18 +25,18 @@ It is recommended to import contracts with a versioned path only.
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity ^0.8.12;
 
-import "https://github.com/pascaldekloe/enft/blob/v1.0.1/contracts/ERC721Metadata.sol";
-import "https://github.com/pascaldekloe/enft/blob/v1.0.1/contracts/FixedNFTSet.sol";
+import "https://github.com/pascaldekloe/enft/blob/v1.1.1/contracts/ERC721Metadata.sol";
+import "https://github.com/pascaldekloe/enft/blob/v1.1.1/contracts/FixedNFTSet.sol";
 
 
 // NFT example with 12 tokens.
 contract MyDozen is FixedNFTSet, ERC721Metadata {
 
-// Constructor assigns all 12 tokens to owner.
-constructor(address owner) FixedNFTSet(12, owner) {
+// Constructor assigns all 12 tokens to the receiver address.
+constructor(address receiver) FixedNFTSet(12, receiver) {
 	// initial Transfer emission is optional
 	for (uint token = 0; token < 12; token++) {
-		emit Transfer(address(0), owner, token);
+		emit Transfer(address(0), receiver, token);
 	}
 }
 
