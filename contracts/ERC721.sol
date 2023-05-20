@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity ^0.8.4;
 
+/// A standard interface for non-fungible tokens, also known as deeds. Every
+/// ERC-721 compliant contract must implement the ERC721 and ERC165 interfaces.
 /// @title ERC-721 Non-Fungible Token Standard
 /// @dev See https://eips.ethereum.org/EIPS/eip-721
 ///  Note: the ERC-165 identifier for this interface is 0x80ac58cd.

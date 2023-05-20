@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity ^0.8.4;
 
+/// A standard interface for tokens, without the OPTIONAL methods.
 /// @title ERC-20 Token Standard
 /// @dev See https://eips.ethereum.org/EIPS/eip-20
 interface ERC20 {
@@ -17,7 +18,7 @@ interface ERC20 {
 	function totalSupply() external view returns (uint256);
 
 	// Returns the account balance of another account with address owner.
-	function balanceOf(address owner) external view returns (uint256 balance);
+	function balanceOf(address owner) external view returns (uint256);
 
 	// Transfers value amount of tokens to address to, and MUST fire the Transfer
 	// event. The function SHOULD throw if the message caller’s account balance does

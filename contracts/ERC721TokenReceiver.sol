@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity ^0.8.4;
 
+/// A wallet/broker/auction application MUST implement the wallet interface if
+/// it will accept safe transfers.
 /// @dev Note: the ERC-165 identifier for this interface is 0x150b7a02.
 interface ERC721TokenReceiver {
 	/// @notice Handle the receipt of an NFT
