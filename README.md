@@ -3,7 +3,8 @@
 The `contracts` directory provides interfaces and implementations of EIP token
 standards. All payable methods are writen for minimal gas consumption.
 
-Automated tests execute standalone with `npx hardhat test`.
+Automated tests execute standalone with `npx hardhat test`. Hardhat itself can
+be obtained with `npm install --save-dev hardhat`.
 
 
 ## Efficiency
