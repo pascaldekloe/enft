@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.8.4;
+pragma solidity >=0.8.13;
 
 /// Creates a standard method to publish and detect what interfaces a smart
 /// contract implements.

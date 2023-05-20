@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.8.4;
+pragma solidity >=0.8.13;
 
 /// A wallet/broker/auction application MUST implement the wallet interface if
 /// it will accept safe transfers.

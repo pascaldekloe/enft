@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.8.4;
+pragma solidity >=0.8.13;
 
 /// A standard interface for non-fungible tokens, also known as deeds. Every
 /// ERC-721 compliant contract must implement the ERC721 and ERC165 interfaces.

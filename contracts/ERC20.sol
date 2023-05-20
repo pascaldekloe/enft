@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.8.4;
+pragma solidity >=0.8.13;
 
 /// A standard interface for tokens, without the OPTIONAL methods.
 /// @title ERC-20 Token Standard

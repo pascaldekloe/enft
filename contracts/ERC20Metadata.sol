@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.8.4;
+pragma solidity >=0.8.13;
 
 /// The OPTIONAL methods (of an ERC-20) can be used to improve usability, but
 /// interfaces and other contracts MUST NOT expect these values to be present.
