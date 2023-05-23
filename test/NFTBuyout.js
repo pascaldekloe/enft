@@ -14,15 +14,15 @@ before(async function() {
 	[this.operator, this.alice, this.bob, this.carol] = await ethers.getSigners();
 
 	this.buyoutFactory      = await ethers.getContractFactory("NFTBuyout");
-        this.currencyFactory    = await ethers.getContractFactory("FixedTokenSupply");
-        this.nonFungibleFactory = await ethers.getContractFactory("FixedNFTSet");
+	this.currencyFactory    = await ethers.getContractFactory("FixedTokenSupply");
+	this.nonFungibleFactory = await ethers.getContractFactory("FixedNFTSet");
 });
 
 // Alice gets NFT. Bob gets ERC-20.
 beforeEach(async function() {
-        this.buyout      = await this.buyoutFactory.deploy();
-        this.nonFungible = await this.nonFungibleFactory.deploy(3, this.alice.address);
-        this.currency    = await this.currencyFactory.deploy(1001, this.bob.address);
+	this.buyout      = await this.buyoutFactory.deploy();
+	this.nonFungible = await this.nonFungibleFactory.deploy(3, this.alice.address);
+	this.currency    = await this.currencyFactory.deploy(1001, this.bob.address);
 
 	await this.buyout.deployed();
 	await this.nonFungible.deployed();
@@ -192,7 +192,13 @@ context("on offer", function() {
 			assert.match(e.message, /no such offer/, "wrong error");
 		}
 	});
+});
 
+context("gas consumption", function() {
+	it("should limit instantiation costs", async function() {
+		var tx = await this.buyout.deployTransaction.wait();
+		assert.isAtMost(tx.gasUsed, 737062, "gas used on deployment");
+	});
 });
 
 });
