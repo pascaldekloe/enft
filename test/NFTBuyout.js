@@ -9,7 +9,7 @@ config.truncateThreshold = 1000;
 
 describe("NFTBuyout", function() {
 
-// VaryType Enumeration
+// PriceVary Enumeration
 const varyNone = 0, varyRampDown = 1;
 
 before(async function() {
@@ -66,7 +66,7 @@ context("on offer", function() {
 	it("redeems tokens", async function() {
 		await this.currencyAsBob.approve(this.buyout.address, 10000);
 
-		await this.buyoutAsBob.offer(this.nonFungible.address, [500, this.currency.address], [varyNone, 0]);
+		await this.buyoutAsBob.offer(this.nonFungible.address, [500, this.currency.address, varyNone, 0]);
 
 		const tokenID = 1;
 		await this.nonFungibleAsAlice.approve(this.buyout.address, tokenID);
@@ -79,7 +79,7 @@ context("on offer", function() {
 	it("denies higher price", async function() {
 		await this.currencyAsBob.approve(this.buyout.address, 10000);
 
-		await this.buyoutAsBob.offer(this.nonFungible.address, [500, this.currency.address], [varyNone, 0]);
+		await this.buyoutAsBob.offer(this.nonFungible.address, [500, this.currency.address, varyNone, 0]);
 
 		const tokenID = 1;
 		await this.nonFungibleAsAlice.approve(this.buyout.address, tokenID);
@@ -95,7 +95,7 @@ context("on offer", function() {
 	it("denies other currency", async function() {
 		await this.currencyAsBob.approve(this.buyout.address, 10000);
 
-		await this.buyoutAsBob.offer(this.nonFungible.address, [500, this.currency.address], [varyNone, 0]);
+		await this.buyoutAsBob.offer(this.nonFungible.address, [500, this.currency.address, varyNone, 0]);
 
 		const tokenID = 1;
 		await this.nonFungibleAsAlice.approve(this.buyout.address, tokenID);
@@ -111,7 +111,7 @@ context("on offer", function() {
 
 	it("needs NFT standard", async function() {
 		try {
-			await this.buyoutAsBob.offer(this.currency.address, [200, this.currency.address], [varyNone, 0]);
+			await this.buyoutAsBob.offer(this.currency.address, [200, this.currency.address, varyNone, 0]);
 			assert.fail("no error");
 		} catch (e) {
 			assert.match(e.message, /need standard NFT/, "wrong error");
@@ -120,7 +120,7 @@ context("on offer", function() {
 
 	it("needs ERC-20 allowance", async function() {
 		try {
-			await this.buyoutAsBob.offer(this.nonFungible.address, [200, this.currency.address], [varyNone, 0]);
+			await this.buyoutAsBob.offer(this.nonFungible.address, [200, this.currency.address, varyNone, 0]);
 			assert.fail("no error");
 		} catch (e) {
 			assert.match(e.message, /no payment allowance/, "wrong error");
@@ -130,7 +130,7 @@ context("on offer", function() {
 	it("sets the token price", async function() {
 		await this.currencyAsBob.approve(this.buyout.address, 10000);
 
-		await this.buyoutAsBob.offer(this.nonFungible.address, [2000, this.currency.address], [varyNone, 0]);
+		await this.buyoutAsBob.offer(this.nonFungible.address, [2000, this.currency.address, varyNone, 0]);
 
 		const tokenID = 1;
 		var price = await this.buyout.tokenPrice(this.nonFungible.address, tokenID, this.bob.address);
@@ -142,7 +142,7 @@ context("on offer", function() {
 	it("applies a price ramp-down", async function() {
 		await this.currencyAsBob.approve(this.buyout.address, 10000);
 
-		await this.buyoutAsBob.offer(this.nonFungible.address, [2000, this.currency.address], [varyRampDown, 7]);
+		await this.buyoutAsBob.offer(this.nonFungible.address, [2000, this.currency.address, varyRampDown, 7]);
 
 		const tokenID = 5;
 		var price = await this.buyout.tokenPrice(this.nonFungible.address, tokenID, this.bob.address);
@@ -154,9 +154,9 @@ context("on offer", function() {
 	it("updates the token price", async function() {
 		await this.currencyAsBob.approve(this.buyout.address, 10000);
 
-		await this.buyoutAsBob.offer(this.nonFungible.address, [20000, this.currency.address], [varyNone, 0]);
+		await this.buyoutAsBob.offer(this.nonFungible.address, [20000, this.currency.address, varyNone, 0]);
 		// update
-		await this.buyoutAsBob.offer(this.nonFungible.address, [30000, this.currency.address], [varyNone, 0]);
+		await this.buyoutAsBob.offer(this.nonFungible.address, [30000, this.currency.address, varyNone, 0]);
 
 		const tokenID = 1;
 		var price = await this.buyout.tokenPrice(this.nonFungible.address, tokenID, this.bob.address);
@@ -168,9 +168,9 @@ context("on offer", function() {
 	it("retracts on a zero price", async function() {
 		await this.currencyAsBob.approve(this.buyout.address, 10000);
 
-		await this.buyoutAsBob.offer(this.nonFungible.address, [200, this.currency.address], [varyNone, 0]);
+		await this.buyoutAsBob.offer(this.nonFungible.address, [200, this.currency.address, varyNone, 0]);
 		// update with amount = 0
-		await this.buyoutAsBob.offer(this.nonFungible.address, [0, this.currency.address], [varyRampDown, 42]);
+		await this.buyoutAsBob.offer(this.nonFungible.address, [0, this.currency.address, varyRampDown, 42]);
 
 		const tokenID = 1;
 		try {
@@ -191,25 +191,25 @@ context("on offer", function() {
 context("gas consumption", function() {
 	it("should limit instantiation costs", async function() {
 		var tx = await this.buyout.deployTransaction.wait();
-		assert.isAtMost(tx.gasUsed, 630788, "gas used on deployment");
+		assert.isAtMost(tx.gasUsed, 585510, "gas used on deployment");
 	});
 
 	it("should limit offer costs", async function() {
 		await this.currencyAsBob.approve(this.buyout.address, 10000);
 		var estimate = this.buyoutAsBob.estimateGas;
-		assert.isAtMost(await estimate.offer(this.nonFungible.address, [500, this.currency.address], [varyNone, 0]), 60014, "gas used");
+		assert.isAtMost(await estimate.offer(this.nonFungible.address, [500, this.currency.address, varyNone, 0]), 59445, "gas used");
 	});
 
 	it("should limit token redemption costs", async function() {
 		await this.currencyAsBob.approve(this.buyout.address, 10000);
 
-		await this.buyoutAsBob.offer(this.nonFungible.address, [500, this.currency.address], [varyNone, 0]);
+		await this.buyoutAsBob.offer(this.nonFungible.address, [500, this.currency.address, varyNone, 0]);
 
 		const tokenID = 1;
 		await this.nonFungibleAsAlice.approve(this.buyout.address, tokenID);
 
 		var estimate = this.buyoutAsAlice.estimateGas;
-		assert.isAtMost(await estimate.redeemToken(this.nonFungible.address, tokenID, this.bob.address, 500, this.currency.address), 104264, "gas used");
+		assert.isAtMost(await estimate.redeemToken(this.nonFungible.address, tokenID, this.bob.address, 500, this.currency.address), 104186, "gas used");
 	});
 });
 

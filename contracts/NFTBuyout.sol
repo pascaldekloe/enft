@@ -21,38 +21,31 @@ contract NFTBuyout {
 /// @param buyer acquisition party
 event NFTBuyoutOffer(address indexed target, address buyer);
 
-// QualifiedPrice provides an (ERC20) unit to the quanty.
-struct QualifiedPrice {
-	uint96  amount;   // currency quantity
-	address currency; // token contract
-}
-
-/// @param None Disable price variation—fixed price for each NFT
+/// @param None Disable price variation—fixed price for each NFT.
 /// @param RampDown Decrease the amount offered per token identifier, with a
 ///  fixed quantity, starting with zero, as in: price − (tokenID × varyAmount).
-enum VaryType { None, RampDown }
+enum PriceVary { None, RampDown }
 
-/// @param scheme algorithm nature, with None for disabled
-/// @param data bytes are interpretated according to scheme
-struct PriceVary {
-	VaryType scheme;
-	uint248  data;
+/// @notice The buyout price is per NFT, with an optional variantion applied.
+/// @param amount currency quantity
+/// @param currency ERC-20 contract
+/// @param vary difference between NFT, with None for disabled
+/// @param data bytes are interpretated according to vary
+struct Price {
+	uint96    amount;
+	address   currency;
+	PriceVary vary;
+	uint248   data;
 }
 
-// private storage unit
-struct Record {
-	QualifiedPrice price;
-	PriceVary      vary;
-}
-
-// Each NFT-contract:buyer:record entry is an individual buyout attempt.
-mapping(address => mapping(address => Record)) private buyouts;
+// Each NFT-contract:buyer:price entry is an individual buyout attempt.
+mapping(address => mapping(address => Price)) private buyouts;
 
 /// @notice Offer either commits to a new deal, or it updates the previous one.
 ///  A zero price amount retracts any ongoing offers (matching target).
 /// @dev ⚠️ Be very carefull with a non-fixed tokenSupply. Think about PriceVary.
 /// @param target ERC-721 contract
-function offer(address target, QualifiedPrice calldata price, PriceVary calldata vary) public payable {
+function offer(address target, Price calldata price) public payable {
 	if (price.amount == 0) {
 		delete buyouts[target][msg.sender];
 		return;
@@ -64,7 +57,7 @@ function offer(address target, QualifiedPrice calldata price, PriceVary calldata
 	// fail-fast: trade requires allowance to this contract
 	require(ERC20(price.currency).allowance(msg.sender, address(this)) != 0, "no payment allowance");
 
-	buyouts[target][msg.sender] = Record({price: price, vary: vary});
+	buyouts[target][msg.sender] = price;
 
 	emit NFTBuyoutOffer(target, msg.sender);
 }
@@ -77,16 +70,16 @@ function offer(address target, QualifiedPrice calldata price, PriceVary calldata
 /// @return amount ERC-20 quantity
 /// @return currency ERC-20 contract
 function tokenPrice(address target, uint256 tokenID, address buyer) public view returns (uint256 amount, address currency) {
-	Record memory record = buyouts[target][buyer];
-	amount = uint256(record.price.amount);
+	Price memory price = buyouts[target][buyer];
+	amount = uint256(price.amount);
 	require(amount != 0, "no such offer");
-	currency = record.price.currency;
+	currency = price.currency;
 
 	// apply price variation, if any
-	VaryType scheme = record.vary.scheme;
-	if (scheme == VaryType.RampDown) {
-		amount -= uint256(record.vary.data) * tokenID;
-	} else if (scheme != VaryType.None) {
+	PriceVary vary = price.vary;
+	if (vary == PriceVary.RampDown) {
+		amount -= uint256(price.data) * tokenID;
+	} else if (vary != PriceVary.None) {
 		revert("unknow vary type");
 	}
 
