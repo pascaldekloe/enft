@@ -102,7 +102,7 @@ function tokenPrice(address target, uint256 tokenID, address buyer) public view 
 }
 
 /// @notice Trade an NFT for ERC-20.
-/// @dev Offers can be modified or retracted.
+/// @dev Tokens can be redeemed more than once. Offers can be modified or retracted.
 /// @param target ERC-721 contract
 /// @param tokenID NFT in subject
 /// @param buyer acquisition party
