@@ -22,9 +22,9 @@ contract NFTBuyout {
 event NFTBuyoutOffer(address indexed target, address buyer);
 
 /// @param None Disable price variation—fixed price for each NFT.
-/// @param RampDown Decrease the amount offered per token identifier, with a
+/// @param RampDownMult Decrease the amount offered per token identifier, with a
 ///  fixed quantity, starting with zero, as in: price − (tokenID × varyAmount).
-enum PriceVary { None, RampDown }
+enum PriceVary { None, RampDownMult }
 
 /// @notice The buyout price is per NFT, with an optional variantion applied.
 /// @param amount currency quantity
@@ -54,6 +54,21 @@ function offer(address target, Price calldata price) public payable {
 	// NFT contracts MUST implement ERC-165 by spec
 	require(ERC165(target).supportsInterface(type(ERC721).interfaceId), "need standard NFT");
 
+	if (price.vary == PriceVary.RampDownMult) {
+		require(ERC165(target).supportsInterface(type(ERC721Enumerable).interfaceId), "ramp-down needs enumerable NFT");
+
+		// determine negative-price threshold
+		uint rampDown = uint(price.data);
+		require(rampDown != 0, "zero ramp-down");
+		uint maxID = uint(price.amount) / rampDown;
+
+		// check every token currently present
+		uint n = ERC721Enumerable(target).totalSupply();
+		for (uint i = 0; i < n; i++) {
+			require(ERC721Enumerable(target).tokenByIndex(i) <= maxID, "token ID underflows ramp-down");
+		}
+	}
+
 	// fail-fast: trade requires allowance to this contract
 	require(ERC20(price.currency).allowance(msg.sender, address(this)) != 0, "no payment allowance");
 
@@ -77,7 +92,7 @@ function tokenPrice(address target, uint256 tokenID, address buyer) public view 
 
 	// apply price variation, if any
 	PriceVary vary = price.vary;
-	if (vary == PriceVary.RampDown) {
+	if (vary == PriceVary.RampDownMult) {
 		amount -= uint256(price.data) * tokenID;
 	} else if (vary != PriceVary.None) {
 		revert("unknow vary type");
