@@ -6,6 +6,11 @@ standards. All payable methods are writen for minimal gas consumption.
 Automated tests execute standalone with `npx hardhat test`. Hardhat itself can
 be obtained with `npm install --save-dev hardhat`.
 
+This is free and unencumbered software released into the
+[public domain](https://creativecommons.org/publicdomain/zero/1.0).
+
+[![Build Status](https://github.com/pascaldekloe/enft/actions/workflows/test.yml/badge.svg)](https://github.com/pascaldekloe/enft/actions/workflows/test.yml)
+
 
 ## Efficiency
 
