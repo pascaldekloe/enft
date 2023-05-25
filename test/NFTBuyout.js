@@ -193,6 +193,24 @@ context("gas consumption", function() {
 		var tx = await this.buyout.deployTransaction.wait();
 		assert.isAtMost(tx.gasUsed, 630788, "gas used on deployment");
 	});
+
+	it("should limit offer costs", async function() {
+		await this.currencyAsBob.approve(this.buyout.address, 10000);
+		var estimate = this.buyoutAsBob.estimateGas;
+		assert.isAtMost(await estimate.offer(this.nonFungible.address, [500, this.currency.address], [varyNone, 0]), 60014, "gas used");
+	});
+
+	it("should limit token redemption costs", async function() {
+		await this.currencyAsBob.approve(this.buyout.address, 10000);
+
+		await this.buyoutAsBob.offer(this.nonFungible.address, [500, this.currency.address], [varyNone, 0]);
+
+		const tokenID = 1;
+		await this.nonFungibleAsAlice.approve(this.buyout.address, tokenID);
+
+		var estimate = this.buyoutAsAlice.estimateGas;
+		assert.isAtMost(await estimate.redeemToken(this.nonFungible.address, tokenID, this.bob.address, 500, this.currency.address), 104264, "gas used");
+	});
 });
 
 });
