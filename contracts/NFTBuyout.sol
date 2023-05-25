@@ -17,8 +17,8 @@ import "./ERC721TokenReceiver.sol";
 contract NFTBuyout {
 
 /// @notice Each buyout attempt gets propagated with one offer event. 
-/// @param target The ERC-721 contract
-/// @param buyer The acquisition party
+/// @param target ERC-721 contract
+/// @param buyer acquisition party
 event NFTBuyoutOffer(address indexed target, address buyer);
 
 // QualifiedPrice provides an (ERC20) unit to the quanty.
@@ -29,11 +29,11 @@ struct QualifiedPrice {
 
 /// @param None Disable price variation—fixed price for each NFT
 /// @param RampDown Decrease the amount offered per token identifier, with a
-///  fixed quantity, starting with zero, as in: price − (tokenID × varyAmount)
+///  fixed quantity, starting with zero, as in: price − (tokenID × varyAmount).
 enum VaryType { None, RampDown }
 
-/// @param scheme The algorithm nature, with None for disabled
-/// @param data Bytes are interpretated according to scheme.
+/// @param scheme algorithm nature, with None for disabled
+/// @param data bytes are interpretated according to scheme
 struct PriceVary {
 	VaryType scheme;
 	uint248  data;
@@ -51,7 +51,7 @@ mapping(address => mapping(address => Record)) private buyouts;
 /// @notice Offer either commits to a new deal, or it updates the previous one.
 ///  A zero price amount retracts any ongoing offers (matching target).
 /// @dev ⚠️ Be very carefull with a non-fixed tokenSupply. Think about PriceVary.
-/// @param target The ERC-721 contract
+/// @param target ERC-721 contract
 function offer(address target, QualifiedPrice calldata price, PriceVary calldata vary) public payable {
 	if (price.amount == 0) {
 		delete buyouts[target][msg.sender];
@@ -71,11 +71,11 @@ function offer(address target, QualifiedPrice calldata price, PriceVary calldata
 
 /// @notice Each NFT is subject to a dedicated trade amount.
 /// @dev ⚠️ Newly minted tokens may alter expectations.
-/// @param target The ERC-721 contract
-/// @param tokenID The NFT in subject
-/// @param buyer The acquisition party
-/// @return amount The ERC-20 quantity
-/// @return currency The ERC-20 contract
+/// @param target ERC-721 contract
+/// @param tokenID NFT in subject
+/// @param buyer acquisition party
+/// @return amount ERC-20 quantity
+/// @return currency ERC-20 contract
 function tokenPrice(address target, uint256 tokenID, address buyer) public view returns (uint256 amount, address currency) {
 	Record memory record = buyouts[target][buyer];
 	amount = uint256(record.price.amount);
@@ -95,11 +95,11 @@ function tokenPrice(address target, uint256 tokenID, address buyer) public view 
 
 /// @notice Trade an NFT for ERC-20.
 /// @dev Offers can be modified or retracted.
-/// @param target The ERC-721 contract
-/// @param tokenID The NFT in subject
-/// @param buyer The acquisition party
-/// @param wantPrice The minimal amount expectation—prevents races
-/// @param wantCurrency The ERC-20 unit expectation—prevents races
+/// @param target ERC-721 contract
+/// @param tokenID NFT in subject
+/// @param buyer acquisition party
+/// @param wantPrice minimal amount expectation—prevents races
+/// @param wantCurrency ERC-20 unit expectation—prevents races
 function redeemToken(address target, uint256 tokenID, address buyer, uint256 wantPrice, address wantCurrency) public {
 	require(msg.sender != buyer, "sell to self");
 
