@@ -78,7 +78,8 @@ function offer(address target, Price calldata price) public payable {
 }
 
 /// @notice Each NFT is subject to a dedicated trade amount.
-/// @dev ⚠️ Newly minted tokens may alter expectations.
+/// @dev ⚠️ Newly minted tokens may alter expectations. There is no check on the
+///  tokenID as non-existing tokens simply won't transfer per ERC-721 standard.
 /// @param target ERC-721 contract
 /// @param tokenID NFT in subject
 /// @param buyer acquisition party
