@@ -28,7 +28,7 @@ Token transfers come in 3 variations.
 The `NFTBuyout` contract is ready on the following chains. Please share when you
 install on a chain not listed here.
 
-* [Sepolia](https://sepolia.etherscan.io/address/0x1b9dfecb419029a54b594327ea23d1a0ea0eafff#code]
+* [Sepolia](https://sepolia.etherscan.io/address/0x1b9dfecb419029a54b594327ea23d1a0ea0eafff#code)
 
 
 Custom tokens can simply inherit the `FixedNFTSet` contract.
