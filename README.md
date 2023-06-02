@@ -25,6 +25,13 @@ Token transfers come in 3 variations.
 
 ## Use
 
+The `NFTBuyout` contract is ready on the following chains. Please share when you
+install on a chain not listed here.
+
+* [Sepolia](https://sepolia.etherscan.io/address/0x1b9dfecb419029a54b594327ea23d1a0ea0eafff#code]
+
+
+Custom tokens can simply inherit the `FixedNFTSet` contract.
 It is recommended to import contracts with a versioned path only.
 
 ```solidity
@@ -77,7 +84,7 @@ function tokenURI(uint256 tokenID) override(ERC721Metadata) public view returns 
 
 In a Node.js environment you can use the contracts in a project with
 `npm install https://github.com/pascaldekloe/enft.git`, and then import with
-`import "enft/contracts/ERC721.sol";` instead of their HTTP URL.
+`import "enft/contracts/ERC721.sol";` instead of the HTTP URL.
 
 
 ## Standard Compliance
