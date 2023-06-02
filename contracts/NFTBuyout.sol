@@ -14,6 +14,7 @@ import "./ERC721TokenReceiver.sol";
 ///  individual NFT owners on whether to make use of any of such offers or not.
 /// @dev Only one contract required per chain. Look for NFTBuyOffer events to
 ///  find an existing one.
+/// @author Pascal S. de Kloe
 contract NFTBuyout {
 
 /// @notice Each offer gets propagated with one event. The specific deal per NFT

@@ -191,7 +191,7 @@ context("on offer", function() {
 context("gas consumption", function() {
 	it("should limit instantiation costs", async function() {
 		var tx = await this.buyout.deployTransaction.wait();
-		assert.isAtMost(tx.gasUsed, 776344, "gas used on deployment");
+		assert.isAtMost(tx.gasUsed, 776356, "gas used on deployment");
 	});
 
 	it("should limit buy offer costs", async function() {
