@@ -5,7 +5,6 @@ import "./ERC20.sol";
 import "./ERC165.sol";
 import "./ERC721.sol";
 import "./ERC721Enumerable.sol";
-import "./ERC721TokenReceiver.sol";
 
 
 /// @title NFT Purchase En Masse
