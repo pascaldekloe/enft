@@ -191,13 +191,13 @@ context("on offer", function() {
 context("gas consumption", function() {
 	it("should limit instantiation costs", async function() {
 		var tx = await this.buyout.deployTransaction.wait();
-		assert.isAtMost(tx.gasUsed, 775936, "gas used on deployment");
+		assert.isAtMost(tx.gasUsed, 776344, "gas used on deployment");
 	});
 
 	it("should limit buy offer costs", async function() {
 		await this.currencyAsBob.approve(this.buyout.address, 10000);
 		var estimate = this.buyoutAsBob.estimateGas;
-		assert.isAtMost(await estimate.buyOffer(this.nonFungible.address, [100100, this.currency.address, varyRampDown, 10]), 84335, "gas used");
+		assert.isAtMost(await estimate.buyOffer(this.nonFungible.address, [100100, this.currency.address, varyRampDown, 10]), 84358, "gas used");
 
 		// then actually do so to verify no error
 		await this.buyoutAsBob.buyOffer(this.nonFungible.address, [100100, this.currency.address, varyRampDown, 10]);
@@ -212,7 +212,7 @@ context("gas consumption", function() {
 		await this.nonFungibleAsAlice.approve(this.buyout.address, tokenID);
 
 		var estimate = this.buyoutAsAlice.estimateGas;
-		assert.isAtMost(await estimate.sellToken(this.nonFungible.address, tokenID, this.bob.address, 500, this.currency.address), 104232, "gas used");
+		assert.isAtMost(await estimate.sellToken(this.nonFungible.address, tokenID, this.bob.address, 500, this.currency.address), 104173, "gas used");
 
 		// then actually do so to verify no error
 		await this.buyoutAsAlice.sellToken(this.nonFungible.address, tokenID, this.bob.address, 500, this.currency.address);

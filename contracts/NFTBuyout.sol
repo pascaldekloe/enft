@@ -59,7 +59,8 @@ function buyOffer(address target, Price calldata price) public payable {
 	// NFT contracts MUST implement ERC-165 by spec
 	require(ERC165(target).supportsInterface(type(ERC721).interfaceId), "need standard NFT");
 
-	if (price.varyScheme == PriceVary.RampDown) {
+	PriceVary vary = price.varyScheme;
+	if (vary == PriceVary.RampDown) {
 		require(ERC165(target).supportsInterface(type(ERC721Enumerable).interfaceId), "ramp-down needs enumerable NFT");
 
 		// determine negative-price threshold
@@ -72,6 +73,8 @@ function buyOffer(address target, Price calldata price) public payable {
 		for (uint i = 0; i < n; i++) {
 			require(ERC721Enumerable(target).tokenByIndex(i) <= maxID, "token ID underflows ramp-down");
 		}
+	} else if (vary != PriceVary.None) {
+		revert("unknow vary type");
 	}
 
 	// fail-fast: trade requires allowance to this contract
@@ -97,11 +100,8 @@ function tokenPrice(address target, uint256 tokenID, address buyer) public view 
 	currency = price.currency;
 
 	// apply price variation, if any
-	PriceVary vary = price.varyScheme;
-	if (vary == PriceVary.RampDown) {
+	if (price.varyScheme == PriceVary.RampDown) {
 		amount -= uint256(price.varyData) * tokenID;
-	} else if (vary != PriceVary.None) {
-		revert("unknow vary type");
 	}
 
 	return (amount, currency);
