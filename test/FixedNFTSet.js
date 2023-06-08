@@ -74,6 +74,14 @@ context("on EIP-165 check", function() {
 });
 
 context("gas consumption", function() {
+	it("has a fixed limit or ERC-165", async function() {
+		// “This function uses less than 30,000 gas.”
+		// — ERC-165: Standard Interface Detection
+		var estimate = this.c.estimateGas;
+		assert.isAtMost(await estimate.supportsInterface(0x01ffc9a7), 30000, "gas used for own interface check");
+		assert.isAtMost(await estimate.supportsInterface(0xffffffff), 30000, "gas used for opt-out interface check");
+	});
+
 	it("should limit instantiation costs", async function() {
 		var tx = await this.c.deployTransaction.wait();
 		assert.isAtMost(tx.gasUsed, 836941, "gas used on deployment");
