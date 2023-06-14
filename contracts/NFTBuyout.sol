@@ -94,17 +94,14 @@ function buyOffer(address target, Price calldata price) public payable {
 /// @return amount ERC-20 quantity
 /// @return currency ERC-20 contract
 function tokenPrice(address target, uint256 tokenID, address buyer) public view returns (uint256 amount, address currency) {
-	Price memory price = buyouts[target][buyer];
-	amount = uint256(price.amount);
+	amount = uint256(buyouts[target][buyer].amount);
 	require(amount != 0, "no such offer");
-	currency = price.currency;
+	currency = buyouts[target][buyer].currency;
 
 	// apply price variation, if any
-	if (price.varyScheme == PriceVary.RampDown) {
-		amount -= uint256(price.varyData) * tokenID;
+	if (buyouts[target][buyer].varyScheme == PriceVary.RampDown) {
+		amount -= uint256(buyouts[target][buyer].varyData) * tokenID;
 	}
-
-	return (amount, currency);
 }
 
 /// @notice Trade one NFT for ERC-20 conform tokenPrice.
